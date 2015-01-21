@@ -3,6 +3,7 @@ import sys
 
 REQUIREMENTS = [
     "docopt==0.6.2",
+    "msgpack-python==0.4.4",
     "nose==1.3.4",
 ]
 

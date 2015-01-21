@@ -18,6 +18,12 @@ class Point(object):
 import json
 import pydoc
 
+import msgpack
+
+
+class InvalidCoding(Exception):
+    pass
+
 
 def dumps(some_object, **kwargs):
     """Write an object to a string.
@@ -26,7 +32,13 @@ def dumps(some_object, **kwargs):
     TODO: Use other encoders than json.
     """
     escaped_dict = escape(some_object)
-    return json.dumps(escaped_dict)
+    encoder = kwargs.get("encoder", "json")
+    if encoder == "json":
+        return json.dumps(escaped_dict)
+    elif encoder == "msgpack":
+        return msgpack.packb(escaped_dict, encoding="utf-8") 
+    else:
+        raise InvalidCoding("invalid encoder: {0}".format(encoder))
 
 
 def loads(serialised_string, **kwargs):
@@ -34,7 +46,13 @@ def loads(serialised_string, **kwargs):
     First the string is converted to a dict using the given encoder.
     Then the dict is simply converted to objects.
     """
-    loaded_dict = json.loads(serialised_string)
+    decoder = kwargs.get("decoder", "json")
+    if decoder == "json":
+        loaded_dict = json.loads(serialised_string)
+    elif decoder == "msgpack":
+        loaded_dict = msgpack.unpackb(serialised_string, encoding="utf-8")
+    else:
+        raise InvalidCoding("invalid decoder: {0}".format(decoder))
     return unescape(loaded_dict)
 
 
