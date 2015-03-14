@@ -66,6 +66,7 @@ if __name__ == "__main__":
         if compress:
             encoded = zlib.compress(encoded)
         time_taken = 1000 * (timeit.default_timer() - start_time)
-        title = "{0} (zipped)".format(coding) if compress else "{0}".format(coding)
-        print u"{0:20s} {1:12d} {2:9.3f}ms".format(title, len(encoded), time_taken)
+        title = "{0} (zipped)".format(coding) if compress else coding
+        print u"{0:20s} {1:12d} {2:9.3f}ms".format(
+            title, len(encoded), time_taken)
         del encoded

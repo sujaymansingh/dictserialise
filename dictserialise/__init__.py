@@ -36,7 +36,7 @@ def dumps(some_object, **kwargs):
     if encoder == "json":
         return json.dumps(escaped_dict)
     elif encoder == "msgpack":
-        return msgpack.packb(escaped_dict, encoding="utf-8") 
+        return msgpack.packb(escaped_dict, encoding="utf-8")
     else:
         raise InvalidCoding("invalid encoder: {0}".format(encoder))
 
@@ -66,11 +66,17 @@ def unescape(item):
     elif isinstance(item, dict):
         if "__classname__" not in item:
             # This is a simple dict, but its key/values may not be.
-            return {unescape(key): unescape(value) for (key, value) in item.iteritems()}
+            return {
+                unescape(key): unescape(value)
+                for (key, value) in item.iteritems()
+            }
         else:
             klass = pydoc.locate(item.pop("__classname__"))
             loaded_object = klass()
-            unescaped_dict = {unescape(key): unescape(value) for (key, value) in item.iteritems()}
+            unescaped_dict = {
+                unescape(key): unescape(value)
+                for (key, value) in item.iteritems()
+            }
             loaded_object.from_dict(unescaped_dict)
             return loaded_object
     else:
@@ -83,9 +89,13 @@ def escape(item):
     if isinstance(item, list):
         return [escape(sub_item) for sub_item in item]
     elif isinstance(item, dict):
-        return {escape(key): escape(value) for (key, value) in item.iteritems()}
+        return {
+            escape(key): escape(value)
+            for (key, value) in item.iteritems()
+        }
     elif hasattr(item, "to_dict"):
-        escaped_dict = {"__classname__": u"{0}.{1}".format(item.__module__, item.__class__.__name__)}
+        escaped_dict = {"__classname__": u"{0}.{1}".format(
+            item.__module__, item.__class__.__name__)}
         for (key, value) in item.to_dict().iteritems():
             escaped_dict[escape(key)] = escape(value)
         return escaped_dict
