@@ -21,6 +21,9 @@ import pydoc
 import msgpack
 
 
+CUSTOM_LOADERS = {}
+
+
 class InvalidCoding(Exception):
     pass
 
@@ -71,7 +74,13 @@ def unescape(item):
                 for (key, value) in item.iteritems()
             }
         else:
-            klass = pydoc.locate(item.pop("__classname__"))
+            classname = item.pop("__classname__")
+
+            if classname in CUSTOM_LOADERS:
+                func = CUSTOM_LOADERS[classname]
+                return func(item)
+
+            klass = pydoc.locate(classname)
             loaded_object = klass()
             unescaped_dict = {
                 unescape(key): unescape(value)
@@ -101,3 +110,8 @@ def escape(item):
         return escaped_dict
     else:
         return item
+
+
+def register_custom_loader(class_, from_dict):
+    classname = u"{0}.{1}".format(class_.__module__, class_.__name__)
+    CUSTOM_LOADERS[classname] = from_dict

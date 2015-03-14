@@ -116,3 +116,33 @@ class TestSerialise(unittest.TestCase):
 
         self.assertEqual(some_object.x, 200)
         self.assertEqual(some_object.y, 100)
+
+    def test_custom_loader(self):
+        constants = {
+            "one": ObjectWithName("one"),
+            "two": ObjectWithName("two"),
+        }
+
+        dictserialise.register_custom_loader(
+            ObjectWithName,
+            lambda x: constants[x["name"]]
+        )
+
+        item = ObjectWithName("one")
+        self.assertFalse(item is constants["one"])
+
+        loaded = dictserialise.loads(dictserialise.dumps(item))
+        self.assertTrue(loaded is constants["one"])
+
+
+class ObjectWithName(object):
+    """This is a dummy class with just one attribute: a name.
+    """
+    def __init__(self, name=""):
+        self.name = name
+
+    def to_dict(self):
+        return {"name": self.name}
+
+    def from_dict(self, d):
+        raise NotImplementedError()
