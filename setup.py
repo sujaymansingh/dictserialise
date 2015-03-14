@@ -1,6 +1,7 @@
 import setuptools
 import sys
 
+
 REQUIREMENTS = [
     "docopt==0.6.2",
     "msgpack-python==0.4.4",
@@ -24,6 +25,6 @@ if __name__ == "__main__":
         url="https://github.com/sujaymansingh/dictserialise",
         license="LICENSE.txt",
         description="A library to load and write objects to disk.",
-        long_description="View the github page (https://github.com/sujaymansingh/dictserialise) for more details.",
+        long_description="View the github page for more details.",
         install_requires=REQUIREMENTS
     )
