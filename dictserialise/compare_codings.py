@@ -18,6 +18,7 @@ import dictserialise
 
 
 class TestPoint(object):
+
     def __init__(self, **kwargs):
         self.x = kwargs.get("x", 0)
         self.y = kwargs.get("y", 0)
@@ -37,7 +38,7 @@ def get_large_object(length):
     first_dict["points"] = []
 
     for i in range(length):
-        first_dict["points"].append(TestPoint(x=i, y=2*i))
+        first_dict["points"].append(TestPoint(x=i, y=2 * i))
     return first_dict
 
 
