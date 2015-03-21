@@ -5,8 +5,10 @@ import dictserialise
 
 
 class Point(object):
+
     """A point has x, y co-ordinates, and a list of subpoints.
     """
+
     def __init__(self, **kwargs):
         self.x = kwargs.get("x", 0)
         self.y = kwargs.get("y", 0)
@@ -23,10 +25,12 @@ class Point(object):
 
 
 class TestSerialise(unittest.TestCase):
+
     def test_loads(self):
         """Load a string into an object.
         """
-        serialised_string = '{"__classname__": "dictserialise.tests.test_serialise.Point", "x": 200, "y": 100, "subpoints": []}'
+        serialised_string = '{"__classname__": "dictserialise.tests.' + \
+            'test_serialise.Point", "x": 200, "y": 100, "subpoints": []}'
 
         some_object = dictserialise.loads(serialised_string, decoder="json")
         self.assertTrue(isinstance(some_object, Point))
@@ -44,10 +48,18 @@ class TestSerialise(unittest.TestCase):
             "y": 2,
             "subpoints": [
                 {
-                    "__classname__": "dictserialise.tests.test_serialise.Point", "x": 10, "y": 20, "subpoints": [],
+                    "__classname__":
+                        "dictserialise.tests.test_serialise.Point",
+                    "x": 10,
+                    "y": 20,
+                    "subpoints": [],
                 },
                 {
-                    "__classname__": "dictserialise.tests.test_serialise.Point", "x": 20, "y": 40, "subpoints": [],
+                    "__classname__":
+                        "dictserialise.tests.test_serialise.Point",
+                    "x": 20,
+                    "y": 40,
+                    "subpoints": [],
                 },
             ]
         }
@@ -78,7 +90,9 @@ class TestSerialise(unittest.TestCase):
         # It is easier to test a loaded dict rather than a string.
         some_dict = json.loads(serialised_string)
 
-        self.assertEqual(some_dict["__classname__"], "dictserialise.tests.test_serialise.Point")
+        self.assertEqual(
+            some_dict["__classname__"],
+            "dictserialise.tests.test_serialise.Point")
         self.assertEqual(some_dict["x"], 3)
         self.assertEqual(some_dict["y"], 2)
 
@@ -91,14 +105,18 @@ class TestSerialise(unittest.TestCase):
         serialised_string = dictserialise.dumps(p, encoder="json")
         some_dict = json.loads(serialised_string)
 
-        self.assertEqual(some_dict["__classname__"], "dictserialise.tests.test_serialise.Point")
+        self.assertEqual(
+            some_dict["__classname__"],
+            "dictserialise.tests.test_serialise.Point")
         self.assertEqual(some_dict["x"], 2)
         self.assertEqual(some_dict["y"], 1)
 
         subpoints = some_dict["subpoints"]
         self.assertIsInstance(subpoints, list)
         for point in subpoints:
-            self.assertEqual(point["__classname__"], "dictserialise.tests.test_serialise.Point")
+            self.assertEqual(
+                point["__classname__"],
+                "dictserialise.tests.test_serialise.Point")
 
         self.assertEqual(subpoints[0]["x"], 10)
         self.assertEqual(subpoints[0]["y"], 5)
@@ -106,7 +124,8 @@ class TestSerialise(unittest.TestCase):
         self.assertEqual(subpoints[1]["y"], 10)
 
     def test_lists(self):
-        serialised_string = '[{"__classname__": "dictserialise.tests.test_serialise.Point", "x": 200, "y": 100, "subpoints": []}]'
+        serialised_string = '[{"__classname__": "dictserialise.tests.' + \
+            'test_serialise.Point", "x": 200, "y": 100, "subpoints": []}]'
 
         result = dictserialise.loads(serialised_string, decoder="json")
         self.assertTrue(isinstance(result, list))
@@ -136,8 +155,10 @@ class TestSerialise(unittest.TestCase):
 
 
 class ObjectWithName(object):
+
     """This is a dummy class with just one attribute: a name.
     """
+
     def __init__(self, name=""):
         self.name = name
 
